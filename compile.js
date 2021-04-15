@@ -21,9 +21,11 @@ const input = {
   },
 }
 
-const output = JSON.parse(solc.compile(JSON.stringify(input)))
+var output = JSON.parse(solc.compile(JSON.stringify(input))).contracts[
+  "Inbox.sol"
+]["SimpleStorage"];
 
 module.exports = {
-  interface: output.contracts["Inbox.sol"].SimpleStorage.abi,
-  bytecode: output.contracts["Inbox.sol"].SimpleStorage.evm.bytecode.object,
+  interface: JSON.parse(output.metadata).output.abi,
+  bytecode: output.evm.bytecode.object,
 }

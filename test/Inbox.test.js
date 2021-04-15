@@ -6,25 +6,37 @@ const { interface, bytecode } = require("../compile")
 
 const web3 = new Web3(ganache.provider())
 
-let accounts, contract
+var accounts, contract
 
-beforeEach(async () => {})
+beforeEach(async () => {
+  accounts = await web3.eth.getAccounts();
 
-describe("", () => {
-  it("", async () => {
-    // get accounts
-    accounts = await web3.eth.getAccounts()
-    // deploy contracts
-    contract = new web3.eth.Contract(JSON.parse(interface))
-      .deploy({
-        data: bytecode,
-        arguments: ["Hello there"],
-      })
-      .send({
-        from: accounts[0],
-        gas: "1000000",
-        gasPrice: 300,
-      })
-    console.log(contract)
-  })
+  contract = await new web3.eth.Contract(interface)
+    .deploy({
+      data: bytecode,
+      arguments: ["Hello, World!"],
+    })
+    .send({
+      from: accounts[0],
+      gas: "1000000",
+    });
 })
+
+describe("Inbox", () => {
+  it("deploys a contract", () => {
+    assert.ok(contract.options.address);
+  });
+
+  it("has a default message", async () => {
+    const message = await contract.methods.get().call();
+    assert.strictEqual(message, "Hello, World!");
+  });
+
+  it("can change the message", async () => {
+    await contract.methods
+      .set("Hello, Computer!")
+      .send({ from: accounts[0] });
+    const message = await contract.methods.get().call();
+    assert.strictEqual(message, "Hello, Computer!");
+  });
+});
