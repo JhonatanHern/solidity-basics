@@ -17,7 +17,7 @@ describe("", () => {
     // deploy contracts
     contract = new web3.eth.Contract(JSON.parse(interface))
       .deploy({
-        data: "0x" + bytecode,
+        data: bytecode,
         arguments: ["Hello there"],
       })
       .send({
