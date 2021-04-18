@@ -2,17 +2,13 @@
 pragma solidity >=0.4.16 <0.9.0;
 
 contract SimpleStorage {
-    string storedData;
+    string public storedData;
 
-    constructor(string memory x){
+    function SimpleStorage(string x) public {
         storedData = x;
     }
 
-    function set(string memory x) external {
+    function set(string x) external {
         storedData = x;
-    }
-
-    function get() external view returns (string memory) {
-        return storedData;
     }
 }
